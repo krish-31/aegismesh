@@ -218,9 +218,18 @@ class MQTTBridge {
     }
   }
 
-  // ── Subscribe to external broker (Mosquitto fallback or Cloud Broker) ──
   _connectExternalBroker(brokerUrl) {
-    const url = brokerUrl || `mqtt://localhost:${MQTT_PORT}`;
+    let url = brokerUrl || `mqtt://localhost:${MQTT_PORT}`;
+    
+    if (brokerUrl && !brokerUrl.includes('://')) {
+      if (brokerUrl.includes(':8883') || brokerUrl.includes('hivemq.cloud')) {
+        url = `mqtts://${brokerUrl}`;
+      } else {
+        url = `mqtt://${brokerUrl}`;
+      }
+      console.log(`[MQTT] Auto-resolved missing protocol: ${url}`);
+    }
+
     const options = {
       clientId: `aegismesh-backend-${Date.now()}`,
       keepalive: 30,
