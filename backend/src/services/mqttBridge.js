@@ -225,6 +225,7 @@ class MQTTBridge {
       clientId: `aegismesh-backend-${Date.now()}`,
       keepalive: 30,
       reconnectPeriod: 3000,
+      rejectUnauthorized: false,
     };
 
     if (process.env.MQTT_USERNAME) {
